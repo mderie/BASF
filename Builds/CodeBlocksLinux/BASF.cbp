@@ -34,7 +34,6 @@
         </Compiler>
         <Linker>
           <Add option="&#96;pkg-config --libs alsa freetype2 libcurl x11 xext xinerama&#96;"/>
-          <Add library="GL"/>
           <Add library="dl"/>
           <Add library="pthread"/>
           <Add library="rt"/>
@@ -66,7 +65,6 @@
         <Linker>
           <Add option="-s"/>
           <Add option="&#96;pkg-config --libs alsa freetype2 libcurl x11 xext xinerama&#96;"/>
-          <Add library="GL"/>
           <Add library="dl"/>
           <Add library="pthread"/>
           <Add library="rt"/>
@@ -2256,70 +2254,6 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/encryption/juce_BlowFish.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/encryption/juce_BlowFish.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/encryption/juce_Primes.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/encryption/juce_Primes.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/encryption/juce_RSAKey.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/encryption/juce_RSAKey.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/hashing/juce_MD5.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/hashing/juce_MD5.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/hashing/juce_SHA256.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/hashing/juce_SHA256.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/hashing/juce_Whirlpool.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/hashing/juce_Whirlpool.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/juce_cryptography.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/juce_cryptography.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/juce_cryptography.mm">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_cryptography/juce_cryptography.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
     <Unit filename="../../../../library/JUCE/modules/juce_data_structures/app_properties/juce_ApplicationProperties.cpp">
       <Option compile="0"/>
       <Option link="0"/>
@@ -4456,198 +4390,6 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/geometry/juce_Draggable3DOrientation.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/geometry/juce_Matrix3D.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/geometry/juce_Quaternion.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/geometry/juce_Vector3D.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/native/juce_MissingGLDefinitions.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/native/juce_OpenGL_android.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/native/juce_OpenGL_ios.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/native/juce_OpenGL_linux.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/native/juce_OpenGL_osx.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/native/juce_OpenGL_win32.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/native/juce_OpenGLExtensions.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLContext.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLContext.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLFrameBuffer.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLFrameBuffer.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLGraphicsContext.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLGraphicsContext.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLHelpers.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLHelpers.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLImage.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLImage.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLPixelFormat.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLPixelFormat.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLRenderer.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLShaderProgram.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLShaderProgram.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLTexture.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/opengl/juce_OpenGLTexture.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/utils/juce_OpenGLAppComponent.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/utils/juce_OpenGLAppComponent.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/juce_opengl.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/juce_opengl.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/juce_opengl.mm">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_opengl/juce_opengl.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/capture/juce_CameraDevice.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/capture/juce_CameraDevice.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/native/juce_android_CameraDevice.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/native/juce_mac_CameraDevice.mm">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/native/juce_mac_QuickTimeMovieComponent.mm">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/native/juce_win32_CameraDevice.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/native/juce_win32_DirectShowComponent.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/native/juce_win32_QuickTimeMovieComponent.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/playback/juce_DirectShowComponent.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/playback/juce_QuickTimeMovieComponent.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/juce_video.cpp">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/juce_video.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/juce_video.mm">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
-    <Unit filename="../../../../library/JUCE/modules/juce_video/juce_video.h">
-      <Option compile="0"/>
-      <Option link="0"/>
-    </Unit>
     <Unit filename="../../JuceLibraryCode/AppConfig.h">
       <Option compile="0"/>
       <Option link="0"/>
@@ -4657,14 +4399,11 @@
     <Unit filename="../../JuceLibraryCode/juce_audio_formats.cpp"/>
     <Unit filename="../../JuceLibraryCode/juce_audio_processors.cpp"/>
     <Unit filename="../../JuceLibraryCode/juce_core.cpp"/>
-    <Unit filename="../../JuceLibraryCode/juce_cryptography.cpp"/>
     <Unit filename="../../JuceLibraryCode/juce_data_structures.cpp"/>
     <Unit filename="../../JuceLibraryCode/juce_events.cpp"/>
     <Unit filename="../../JuceLibraryCode/juce_graphics.cpp"/>
     <Unit filename="../../JuceLibraryCode/juce_gui_basics.cpp"/>
     <Unit filename="../../JuceLibraryCode/juce_gui_extra.cpp"/>
-    <Unit filename="../../JuceLibraryCode/juce_opengl.cpp"/>
-    <Unit filename="../../JuceLibraryCode/juce_video.cpp"/>
     <Unit filename="../../JuceLibraryCode/JuceHeader.h">
       <Option compile="0"/>
       <Option link="0"/>
