@@ -3,7 +3,7 @@
 	"AppConfig.h"
 	<juce_audio_basics/juce_audio_basics.cpp>
 
-1492216271 /home/sam/laboratory/basf/JuceLibraryCode/AppConfig.h
+1492350114 /home/sam/laboratory/basf/JuceLibraryCode/AppConfig.h
 
 1489507322 /home/sam/library/JUCE/modules/juce_audio_basics/juce_audio_basics.cpp
 	"juce_audio_basics.h"
@@ -3014,7 +3014,7 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_cryptography/hashing/juce_Whirlpool.cpp
 
-1491746043 source:/home/sam/laboratory/basf/JuceLibraryCode/juce_data_structures.cpp
+1492216271 source:/home/sam/laboratory/basf/JuceLibraryCode/juce_data_structures.cpp
 	"AppConfig.h"
 	<juce_data_structures/juce_data_structures.cpp>
 
@@ -3109,7 +3109,7 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_events/native/juce_android_Messaging.cpp
 
-1491746043 source:/home/sam/laboratory/basf/JuceLibraryCode/juce_graphics.cpp
+1492216271 source:/home/sam/laboratory/basf/JuceLibraryCode/juce_graphics.cpp
 	"AppConfig.h"
 	<juce_graphics/juce_graphics.cpp>
 
@@ -3622,7 +3622,7 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_graphics/native/juce_android_Fonts.cpp
 
-1491746043 source:/home/sam/laboratory/basf/JuceLibraryCode/juce_gui_basics.cpp
+1492216271 source:/home/sam/laboratory/basf/JuceLibraryCode/juce_gui_basics.cpp
 	"AppConfig.h"
 	<juce_gui_basics/juce_gui_basics.cpp>
 
@@ -4037,7 +4037,7 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_gui_basics/native/juce_android_FileChooser.cpp
 
-1491746043 source:/home/sam/laboratory/basf/JuceLibraryCode/juce_gui_extra.cpp
+1492216271 source:/home/sam/laboratory/basf/JuceLibraryCode/juce_gui_extra.cpp
 	"AppConfig.h"
 	<juce_gui_extra/juce_gui_extra.cpp>
 
@@ -4302,20 +4302,144 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_video/capture/juce_CameraDevice.cpp
 
-1491746043 source:/home/sam/laboratory/basf/Source/Main.cpp
-	"../JuceLibraryCode/JuceHeader.h"
+1492350405 source:/home/sam/laboratory/basf/Source/Main.cpp
 	<iostream>
+	"../JuceLibraryCode/JuceHeader.h"
+	"LaunchpadPrimitives.hpp"
+	"MainAudioComponent.hpp"
 
-1492216271 /home/sam/laboratory/basf/JuceLibraryCode/JuceHeader.h
+1492350114 /home/sam/laboratory/basf/JuceLibraryCode/JuceHeader.h
 	"AppConfig.h"
 	<juce_audio_basics/juce_audio_basics.h>
 	<juce_audio_devices/juce_audio_devices.h>
 	<juce_audio_formats/juce_audio_formats.h>
 	<juce_audio_processors/juce_audio_processors.h>
+	<juce_audio_utils/juce_audio_utils.h>
 	<juce_core/juce_core.h>
 	<juce_data_structures/juce_data_structures.h>
 	<juce_events/juce_events.h>
 	<juce_graphics/juce_graphics.h>
 	<juce_gui_basics/juce_gui_basics.h>
 	<juce_gui_extra/juce_gui_extra.h>
+
+1487466084 source:/home/sam/laboratory/basf/Source/LaunchpadPrimitives.cpp
+	"LaunchpadPrimitives.hpp"
+
+1492335414 /home/sam/laboratory/basf/Source/LaunchpadPrimitives.hpp
+	"../JuceLibraryCode/JuceHeader.h"
+
+1492350114 source:/home/sam/laboratory/basf/JuceLibraryCode/juce_audio_utils.cpp
+	"AppConfig.h"
+	<juce_audio_utils/juce_audio_utils.cpp>
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/juce_audio_utils.cpp
+	"juce_audio_utils.h"
+	<juce_gui_extra/juce_gui_extra.h>
+	<imapi.h>
+	<imapierror.h>
+	"gui/juce_AudioDeviceSelectorComponent.cpp"
+	"gui/juce_AudioThumbnail.cpp"
+	"gui/juce_AudioThumbnailCache.cpp"
+	"gui/juce_AudioVisualiserComponent.cpp"
+	"gui/juce_MidiKeyboardComponent.cpp"
+	"gui/juce_AudioAppComponent.cpp"
+	"players/juce_SoundPlayer.cpp"
+	"players/juce_AudioProcessorPlayer.cpp"
+	"audio_cd/juce_AudioCDReader.cpp"
+	"native/juce_mac_BluetoothMidiDevicePairingDialogue.mm"
+	"../juce_core/native/juce_osx_ObjCHelpers.h"
+	"native/juce_mac_AudioCDReader.mm"
+	"native/juce_mac_AudioCDBurner.mm"
+	"native/juce_ios_BluetoothMidiDevicePairingDialogue.mm"
+	"native/juce_android_BluetoothMidiDevicePairingDialogue.cpp"
+	"native/juce_linux_AudioCDReader.cpp"
+	"native/juce_linux_BluetoothMidiDevicePairingDialogue.cpp"
+	"native/juce_win_BluetoothMidiDevicePairingDialogue.cpp"
+	"../juce_core/native/juce_win32_ComSmartPtr.h"
+	"native/juce_win32_AudioCDReader.cpp"
+	"native/juce_win32_AudioCDBurner.cpp"
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/juce_audio_utils.h
+	<juce_gui_basics/juce_gui_basics.h>
+	<juce_audio_devices/juce_audio_devices.h>
+	<juce_audio_formats/juce_audio_formats.h>
+	<juce_audio_processors/juce_audio_processors.h>
+	"gui/juce_AudioDeviceSelectorComponent.h"
+	"gui/juce_AudioThumbnailBase.h"
+	"gui/juce_AudioThumbnail.h"
+	"gui/juce_AudioThumbnailCache.h"
+	"gui/juce_AudioVisualiserComponent.h"
+	"gui/juce_MidiKeyboardComponent.h"
+	"gui/juce_AudioAppComponent.h"
+	"gui/juce_BluetoothMidiDevicePairingDialogue.h"
+	"players/juce_SoundPlayer.h"
+	"players/juce_AudioProcessorPlayer.h"
+	"audio_cd/juce_AudioCDBurner.h"
+	"audio_cd/juce_AudioCDReader.h"
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioDeviceSelectorComponent.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioThumbnailBase.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioThumbnail.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioThumbnailCache.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioVisualiserComponent.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_MidiKeyboardComponent.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioAppComponent.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_BluetoothMidiDevicePairingDialogue.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/players/juce_SoundPlayer.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/players/juce_AudioProcessorPlayer.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/audio_cd/juce_AudioCDBurner.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/audio_cd/juce_AudioCDReader.h
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioDeviceSelectorComponent.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioThumbnail.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioThumbnailCache.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioVisualiserComponent.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_MidiKeyboardComponent.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/gui/juce_AudioAppComponent.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/players/juce_SoundPlayer.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/players/juce_AudioProcessorPlayer.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/audio_cd/juce_AudioCDReader.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_mac_BluetoothMidiDevicePairingDialogue.mm
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_mac_AudioCDReader.mm
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_mac_AudioCDBurner.mm
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_ios_BluetoothMidiDevicePairingDialogue.mm
+	<CoreAudioKit/CoreAudioKit.h>
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_android_BluetoothMidiDevicePairingDialogue.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_linux_AudioCDReader.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_linux_BluetoothMidiDevicePairingDialogue.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_win_BluetoothMidiDevicePairingDialogue.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_win32_AudioCDReader.cpp
+
+1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_win32_AudioCDBurner.cpp
+
+1492349740 /home/sam/laboratory/basf/Source/MainAudioComponent.hpp
+	"../JuceLibraryCode/JuceHeader.h"
 
