@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include <string>
+#include <stdint.h> // For the uint8
+#include <iso646.h> // For or support
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "LaunchpadPrimitives.hpp"
@@ -24,20 +26,7 @@ bool done = false;
 
 using namespace std;
 
-// TIMER stuff ----------------------------------------------------------------
-
-class BPMTimer : public juce::HighResolutionTimer
-{
-public:
-	void hiResTimerCallback() override;
-};
-
-void BPMTimer::hiResTimerCallback()
-{
-	return;
-}
-
-BPMTimer* bpmTimer = NULL;
+//typedef unsigned char[8] spectres;
 
 // Midi callback stuff --------------------------------------------------------
 
@@ -102,11 +91,27 @@ void clearMatrix()
 	}
 }
 
-void displayMatrixOnLaunchpad()
+void displayMatrixOnLaunchpad() // const uint8_t[8] left, const uint8_t[8] right)
 {
 	// Clear it
+	lp->ClearScreen();
 
-	// Push the matrix content
+	// Push the matrix content... Really need to check the fast way of refreshing the entire LP
+	for (int j = 0; j < 4; j++)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			//lp->SetPixel(i, j, ; // TO be continued...
+		}
+	}
+
+	for (int j = 5; j < 8; j++)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			//lp->SetPixel(i, j, ;
+		}
+	}
 
 	return;
 }
@@ -128,122 +133,146 @@ void POC()
 // Code taken almost as is from JUCE play some file tutorial ------------------
 MainAudioComponent *mac = NULL;
 
-/*
-void stop()
+// For the POC : just wait a few seconds, fake the user input ------------------
+
+class BPMTimer : public juce::HighResolutionTimer
 {
-    changeState(Stopping);
-}
+public:
+	void hiResTimerCallback() override;
+};
 
-void play(const string& what)
+void BPMTimer::hiResTimerCallback()
 {
-    mac = new MainContentComponent();
+    done = true;
+    this->stopTimer();
+};
 
-    File file(what);
-    AudioFormatReader* reader = formatManager.createReaderFor (file);
+BPMTimer* bpmTimer = NULL;
 
-    if (reader != nullptr)
-    {
-        ScopedPointer<AudioFormatReaderSource> newSource = new AudioFormatReaderSource (reader, true);
-        transportSource.setSource (newSource, 0, nullptr, reader->sampleRate);
-        readerSource = newSource.release();
-    }
-
-	return;
-}
-*/
-
-//==============================================================================
+// The main (dish) ------------------------------------------------------------
 int main (int argc, char* argv[])
 {
 	cout << "Welcome to BASF (= Bare Audio Spectrogram Fourier)" << endl;
 
-	if (argc != 2)
+	if ((argc < 2) or (argc > 3))
 	{
 		cout << "Usage : " << endl;
-		cout << "basf audio_filename" << endl;
+		cout << "basf audio_filename [nousb]" << endl;
 		return -1;
 	}
 
-  int i, lpOutIndex, lpInIndex;
+	int i, lpOutIndex, lpInIndex;
 	LPCallback lpcb;
 	string dummy;
+	bool nousb = false;
 
-	// Now get the LP for output
-
-  std::cout << "Names of all the midi output device (lp)" << std::endl;
-	juce::StringArray outputDevices = juce::MidiOutput::getDevices();
-	i = 0;
-	lpOutIndex = -1;
-	lpInIndex = -1;
-
-	// Microsoft specific ! https://msdn.microsoft.com/en-us/library/ms177202.aspx
-	// for each (juce::String item in outputDevices)
-    for (auto s : outputDevices)
+	if (argc == 3)
 	{
-		if (s.contains("Launchpad"))
-		{
-			lpOutIndex = i;
-		}
-
-		std::cout << "index " << i++ << " : " << s << std::endl;
+        if (strcmp(argv[2], "nousb") == 0)
+        {
+            nousb = true;
+        }
+        else
+        {
+            cout << "Usage : " << endl;
+            cout << "basf audio_filename [nousb]" << endl;
+            return -1;
+        }
 	}
 
-	if (lpOutIndex == -1)
+	juce::String fullFilename = File::getCurrentWorkingDirectory().getChildFile(argv[1]).getFullPathName();
+	//cout << "fullFilename = " << fullFilename << endl; // Care, strange construction to get path... Into non std string :(
+
+	if (!nousb)
 	{
-		lpOutIndex = 1; // Fine tune this default value !
+        // Now get the LP for output
+        std::cout << "Names of all the midi output device (lp)" << std::endl;
+        juce::StringArray outputDevices = juce::MidiOutput::getDevices();
+        i = 0;
+        lpOutIndex = -1;
+        lpInIndex = -1;
+
+        // Microsoft specific ! https://msdn.microsoft.com/en-us/library/ms177202.aspx
+        // for each (juce::String item in outputDevices)
+        for (auto s : outputDevices)
+        {
+            if (s.contains("Launchpad"))
+            {
+                lpOutIndex = i;
+            }
+
+            std::cout << "index " << i++ << " : " << s << std::endl;
+        }
+
+        if (lpOutIndex == -1)
+        {
+            lpOutIndex = 1; // Fine tune this default value !
+        }
+
+        std::cout << "About to use " << lpOutIndex << " as index... Press ENTER or CTRL-C to stop !" << std::endl;
+        std::getline(std::cin, dummy);
+
+        midiLP = juce::MidiOutput::openDevice(lpOutIndex);
+        lp = new LP(midiLP);
+        lp->ClearScreen();
+
+        // Get again the LP but for input this time
+
+        std::cout << "Names of all the midi input device (lp again)" << std::endl;
+        juce::StringArray inputDevices = juce::MidiInput::getDevices();
+        i = 0;
+        for (auto s : inputDevices)
+        {
+            if (s.contains("Launchpad"))
+            {
+                lpInIndex = i;
+            }
+
+            std::cout << "index " << i++ << " : " << s << std::endl;
+        }
+
+        if (lpInIndex == -1)
+        {
+            lpInIndex = 1; // Fine tune this default value !
+        }
+
+        std::cout << "About to use" << lpInIndex << " as index... Press ENTER or CTRL-C to stop !" << std::endl;
+        std::getline(std::cin, dummy);
+
+        midiInput = juce::MidiInput::openDevice(lpInIndex, &lpcb);
+        midiInput->start();
 	}
 
-	std::cout << "About to use " << lpOutIndex << " as index... Press ENTER or CTRL-C to stop !" << std::endl;
-	std::getline(std::cin, dummy);
+	bpmTimer = new BPMTimer();
+	bpmTimer->startTimer(5000); // Time is money :)
 
-	midiLP = juce::MidiOutput::openDevice(lpOutIndex);
-	lp = new LP(midiLP);
-	lp->ClearScreen();
-
-    // Get again the LP but for input this time
-
-	std::cout << "Names of all the midi input device (lp again)" << std::endl;
-	juce::StringArray inputDevices = juce::MidiInput::getDevices();
-	i = 0;
-	for (auto s : inputDevices)
-	{
-		if (s.contains("Launchpad"))
-		{
-			lpInIndex = i;
-		}
-
-		std::cout << "index " << i++ << " : " << s << std::endl;
-	}
-
-	if (lpInIndex == -1)
-	{
-		lpInIndex = 1; // Fine tune this default value !
-	}
-
-	std::cout << "About to use" << lpInIndex << " as index... Press ENTER or CTRL-C to stop !" << std::endl;
-	std::getline(std::cin, dummy);
-
-	midiInput = juce::MidiInput::openDevice(lpInIndex, &lpcb);
-	midiInput->start();
-
-	mac->play(argv[1]);
+	mac = new MainAudioComponent(argv[1]); // Start immediately !!!
+	//mac->play(); // For now play does not return until the end of the song !!! But use thread::sleep
 
 	// main loop :)
     while (!done)
 	{
 	}
 
-	// POC();
-
 	// Stop all !
+	delete bpmTimer;
+
 	mac->stop();
 	delete mac;
 
-	midiInput->stop();
-    delete midiInput;
+	if (!nousb)
+	{
+        midiInput->stop();
+        delete midiInput;
 
-	lp->ClearScreen();
-	delete lp;
+        //midiLP->stop();
+        delete midiLP;
+
+        lp->ClearScreen();
+        delete lp;
+    }
+
+    cout << "That's all folks !" << endl;
 
 	return 0;
 }
