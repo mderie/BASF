@@ -9,6 +9,7 @@
 */
 
 #include <iostream>
+#include <string>
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "LaunchpadPrimitives.hpp"
@@ -22,7 +23,6 @@ LP* lp = NULL;
 bool done = false;
 
 using namespace std;
-
 
 // TIMER stuff ----------------------------------------------------------------
 
@@ -164,13 +164,13 @@ int main (int argc, char* argv[])
 		return -1;
 	}
 
-    int i, lpOutIndex, lpInIndex;
+  int i, lpOutIndex, lpInIndex;
 	LPCallback lpcb;
 	string dummy;
 
 	// Now get the LP for output
 
-    std::cout << "Names of all the midi output device (lp)" << std::endl;
+  std::cout << "Names of all the midi output device (lp)" << std::endl;
 	juce::StringArray outputDevices = juce::MidiOutput::getDevices();
 	i = 0;
 	lpOutIndex = -1;
