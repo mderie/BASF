@@ -4302,7 +4302,7 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_video/capture/juce_CameraDevice.cpp
 
-1492350405 source:/home/sam/laboratory/basf/Source/Main.cpp
+1492363849 source:/home/sam/laboratory/basf/Source/Main.cpp
 	<iostream>
 	"../JuceLibraryCode/JuceHeader.h"
 	"LaunchpadPrimitives.hpp"
@@ -4440,6 +4440,10 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_win32_AudioCDBurner.cpp
 
-1492349740 /home/sam/laboratory/basf/Source/MainAudioComponent.hpp
+1492366034 /home/sam/laboratory/basf/Source/MainAudioComponent.hpp
 	"../JuceLibraryCode/JuceHeader.h"
+
+1492356053 source:/home/sam/laboratory/basf/Source/MainAudioComponent.cpp
+	<iostream>
+	"MainAudioComponent.hpp"
 
