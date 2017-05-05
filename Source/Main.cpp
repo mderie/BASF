@@ -131,7 +131,7 @@ void POC()
 }
 
 // Code taken almost as is from JUCE play some file tutorial ------------------
-MainAudioComponent *mac = NULL;
+//MainAudioComponent *mac = NULL;
 
 // For the POC : just wait a few seconds, fake the user input ------------------
 
@@ -243,11 +243,18 @@ int main (int argc, char* argv[])
         midiInput->start();
 	}
 
+	cout << "About to create the 5000 msec demo timer" << endl;
+
 	bpmTimer = new BPMTimer();
 	bpmTimer->startTimer(5000); // Time is money :)
 
-	mac = new MainAudioComponent(argv[1]); // Start immediately !!!
+	cout << "About to create the ugly singleton" << endl;
+
+	//mac = new MainAudioComponent(argv[1]); // Start immediately !!!
 	//mac->play(); // For now play does not return until the end of the song !!! But use thread::sleep
+
+	initMACSingleton(argv[1]); // Beurk kind of global singleton with constructor... Start immediately !!!
+	cout << "About to enter the main loop" << endl;
 
 	// main loop :)
     while (!done)
@@ -257,11 +264,15 @@ int main (int argc, char* argv[])
 	// Stop all !
 	delete bpmTimer;
 
-	mac->stop();
-	delete mac;
+    cout << "About to stop !" << endl;
+	getMACSingleton()->stop();
+	cout << "About to call dtor !" << endl;
+	delete getMACSingleton(); // Argh !-)
+	cout << "Dead here ?" << endl;
 
 	if (!nousb)
 	{
+        cout << "About to clean the usb stuff !" << endl;
         midiInput->stop();
         delete midiInput;
 

@@ -2,32 +2,131 @@
 #include <iostream>
 #include "MainAudioComponent.hpp"
 
-//MainAudioComponent::MainAudioComponent() : m_state(Stopped)
-MainAudioComponent::MainAudioComponent(std::string fileInput)
-{
-	File file(File::getCurrentWorkingDirectory().getChildFile(juce::String(fileInput)));
-    m_afm.registerBasicFormats();
-	m_afrs = new AudioFormatReaderSource(m_afm.createReaderFor(file), true);
-    m_adm.initialiseWithDefaultDevices(0, 2);
-    m_aiod = m_adm.getCurrentAudioDevice(); // Needed later ?
+using namespace std;
 
+void AudioChangeListener::changeListenerCallback(ChangeBroadcaster *source)
+{
+    std::cout << "AudioChangeListener::changeListenerCallback on called !" << std::endl;
+    if (source == getMACSingleton()->m_adm)
+    {
+        std::cout << "changeListenerCallback on m_adm called !" << std::endl;
+    }
+}
+
+void AudioFormatReaderSourceHook::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
+{
+    std::cout << "AudioFormatReaderSourceHook::getNextAudioBlock called !" << std::endl;
+    AudioFormatReaderSource::getNextAudioBlock(bufferToFill);
+}
+
+void AudioFormatReaderSourceHook::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
+{
+    std::cout << "AudioFormatReaderSourceHook::samplesPerBlockExpected = " << samplesPerBlockExpected << ", sampleRate = " << sampleRate << std::endl;
+    AudioFormatReaderSource::prepareToPlay(samplesPerBlockExpected, sampleRate);
+}
+
+void AudioTransportSourceHook::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
+{
+    std::cout << "AudioTransportSourceHook::getNextAudioBlock called !" << std::endl;
+    AudioTransportSource::getNextAudioBlock(bufferToFill);
+
+    // Process FFT on the buffer here ?
+    getMACSingleton()->m_afrs->getNextAudioBlock(bufferToFill);
+}
+
+void AudioTransportSourceHook::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
+{
+    std::cout << "AudioTransportSourceHook::samplesPerBlockExpected = " << samplesPerBlockExpected << ", sampleRate = " << sampleRate << std::endl;
+    AudioTransportSource::prepareToPlay(samplesPerBlockExpected, sampleRate);
+}
+
+MainAudioComponent* mac = nullptr;
+void initMACSingleton(const std::string& fileInput)
+{
+    mac = new MainAudioComponent(fileInput);
+}
+MainAudioComponent* getMACSingleton()
+{
+    return mac;
+}
+
+//MainAudioComponent::MainAudioComponent() : m_state(Stopped)
+MainAudioComponent::MainAudioComponent(const std::string& fileInput)
+{
+    cout << "MainAudioComponent : Entering ctor fileInput = " << fileInput << endl;
+
+	File file(File::getCurrentWorkingDirectory().getChildFile(juce::String(fileInput)));
+	cout << "file.getFullPathName() = " << file.getFullPathName() << endl;
+
+	cout << "step 0" << endl;
+	m_acl = new AudioChangeListener();
+	if (!m_acl)
+	{
+        cout << "Oups : m_acl is null" << endl;
+        return;
+	}
+
+	cout << "step 1" << endl;
+	m_afm = new AudioFormatManager();
+	if (!m_afm)
+	{
+        cout << "Oups : m_afm is null" << endl;
+        return;
+	}
+    m_afm->registerBasicFormats(); // Care : the returned list include mod under Windows but not under Linux !!!
+    cout << "m_afm->getWildcardForAllFormats() = " << m_afm->getWildcardForAllFormats() << endl;
+
+    cout << "step 2" << endl;
+	m_afrs = new AudioFormatReaderSource(m_afm->createReaderFor(file), true);
+	if (!m_afrs)
+	{
+        cout << "Oups : m_afrs is null" << endl;
+        return;
+	}
+
+	cout << "step 3" << endl;
+	m_adm = new AudioDeviceManager();
+	if (!m_adm)
+	{
+        cout << "Oups : m_adm is null" << endl;
+        return;
+	}
+    m_adm->initialiseWithDefaultDevices(0, 2);
+
+    cout << "step 4" << endl;
+    m_aiod = m_adm->getCurrentAudioDevice(); // Needed ! See the stop()
     if (!m_aiod)
     {
-        std::cout << "Oups : m_aiod is null" << std::endl;
+        cout << "Oups : m_aiod is null" << endl;
+        return;
     }
 
-    if (!m_afrs)
-    {
-        std::cout << "Oups : m_afrs is null" << std::endl;
-    }
-
+    cout << "step 5" << endl;
     m_asp = new AudioSourcePlayer();
     if (!m_asp)
     {
-        std::cout << "Oups : m_asp is null" << std::endl; // Very weird case :)
+        std::cout << "Oups : m_asp is null" << endl; // Very weird case :)
+        return;
     }
-    m_asp->setSource(m_afrs);
-    m_adm.addAudioCallback(m_asp); // Start audio !
+
+    cout << "step 6" << endl;
+    m_atsh = new AudioTransportSourceHook();
+    if (!m_atsh)
+    {
+        std::cout << "Oups : m_atph is null" << endl;
+        return;
+    }
+
+    //cout << "step 7" << endl;
+    //m_asp->setSource(m_afrs);
+    cout << "step 7 bis" << endl;
+    m_asp->setSource(m_atsh); // Replace the m_afrs !
+    cout << "step 8" << endl;
+    m_adm->addChangeListener(m_acl);
+    cout << "step 9" << endl;
+    m_adm->addAudioCallback(m_asp); // Start audio ! On speaker for now... We have to tweak the output...
+    cout << "step A" << endl;
+    //m_adm.addAudioCallback(?);
 
     //TODO : needed ?
     //m_transportSource.addChangeListener();
@@ -43,9 +142,18 @@ MainAudioComponent::MainAudioComponent(std::string fileInput)
 
 MainAudioComponent::~MainAudioComponent()
 {
-    if (m_afrs)
+    cout << "Entering dtor" << endl;
+
+    if (m_atsh)
     {
-        delete m_afrs;
+        cout << "About to delete m_atsh" << endl;
+        delete m_atsh;
+    }
+
+    if (m_asp)
+    {
+        cout << "About to delete m_asp" << endl;
+        delete m_asp; // BOUM !?!
     }
 
     // Needed ?
@@ -54,12 +162,37 @@ MainAudioComponent::~MainAudioComponent()
     //    delete m_aiod;
     //}
 
-    if (m_asp)
+    if (m_afrs)
     {
-        delete m_asp;
+        cout << "About to delete m_afrs" << endl;
+        delete m_afrs;
     }
 
-    m_adm.closeAudioDevice();
+    cout << "About to call m_adm->closeAudioDevice()" << endl;
+    m_adm->closeAudioDevice();
+    if (m_adm)
+    {
+        cout << "About to delete m_adm" << endl;
+        delete m_adm;
+    }
+
+	if (m_afrs)
+	{
+        cout << "About to delete m_afrs" << endl;
+        // delete m_afrs; // BOUM !!!
+	}
+
+	if (m_afm)
+	{
+        cout << "About to delete m_afm" << endl;
+        delete m_afm;
+	}
+
+	if (m_acl)
+	{
+        cout << "About to delete m_acl" << endl;
+        delete m_acl;
+	}
 
     //TODO : Do we need to something about m_readerSource ? Not used to play with scoped ptr...
 
@@ -84,9 +217,9 @@ void MainAudioComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferT
 }
 */
 
-/*
 void MainAudioComponent::changeListenerCallback(ChangeBroadcaster* source)
 {
+/*
     if (source == &m_transportSource)
     {
         if (m_transportSource.isPlaying())
@@ -98,8 +231,8 @@ void MainAudioComponent::changeListenerCallback(ChangeBroadcaster* source)
             changeState(Stopped); // Or Stopping ?
         }
     }
-}
 */
+}
 
 /*
 void MainAudioComponent::changeState(TransportState newState)
@@ -171,5 +304,14 @@ void MainAudioComponent::play(const std::string& what)
 void MainAudioComponent::stop()
 {
     //changeState(Stopping);
-	m_afrs->setNextReadPosition(m_afrs->getTotalLength());
+	//m_afrs->setNextReadPosition(m_afrs->getTotalLength());
+	// m_aiod->stop();
+
+    cout << "About to call m_aiod->stop()" << endl;
+    m_aiod->stop();
+
+
+    // By doing this we will call changeListenerCallback !!!
+    //cout << "About to call m_adm->sendSynchronousChangeMessage()" << endl;
+	//m_adm->sendSynchronousChangeMessage(); // Needed ?
 }
