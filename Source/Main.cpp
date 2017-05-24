@@ -20,9 +20,10 @@
 juce::MidiInput* midiInput = NULL; // LP !
 juce::MidiOutput* midiLP = NULL;
 
-int matrix[8][8];
+int matrix[8][8]; // (Row, Col)
 LP* lp = NULL;
 bool done = false;
+bool nousb = false;
 
 using namespace std;
 
@@ -55,7 +56,7 @@ void LPCallback::handleIncomingMidiMessage(juce::MidiInput* source, const juce::
 		return;
 		// s_keyPressed = true; // Check this !?!
 	}
-	int key = (static_cast<int>(*(p + 1)));
+	//int key = (static_cast<int>(*(p + 1)));
 	done = true; // "any" key pressed :)
 }
 
@@ -82,38 +83,115 @@ void displayMatrixOnConsole()
 
 void clearMatrix()
 {
-	for (int j = 0; j < 8; j++)
+	for (int j = 0; j < 8; j++) // Row
 	{
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 8; i++) // Col
 		{
 			matrix[j][i] = 0;
 		}
 	}
 }
 
-void displayMatrixOnLaunchpad() // const uint8_t[8] left, const uint8_t[8] right)
+void displayMatrixOnLaunchpad()
 {
 	// Clear it
 	lp->ClearScreen();
 
 	// Push the matrix content... Really need to check the fast way of refreshing the entire LP
-	for (int j = 0; j < 4; j++)
+	for (int j = 0; j < 8; j++)
 	{
 		for (int i = 0; i < 8; i++)
 		{
-			//lp->SetPixel(i, j, ; // TO be continued...
+			lp->SetPixel(i, j, matrix[j][i]); // [j,i] does not compile, weird error message (invalid conversion fomr in* to int)
 		}
 	}
+}
 
-	for (int j = 5; j < 8; j++)
-	{
-		for (int i = 0; i < 8; i++)
-		{
-			//lp->SetPixel(i, j, ;
-		}
-	}
+void UpdateMatrix(const juce::uint8 left[], const juce::uint8 right[])
+{
+    cout << "Entering/leaving UpdateMatrix !" << endl;
+    return;
 
-	return;
+    for (int i = 0; i < 8; i++)
+    {
+        if (left[i] > 0)
+        {
+            matrix[3][i] = LP::GREEN_HIGH;
+            if (left[i] > 64)
+            {
+                matrix[2][i] = LP::GREEN_HIGH;
+                if (left[i] > 128)
+                {
+                    matrix[1][i] = LP::YELLOW;
+                    if (left[i] > 192)
+                    {
+                        matrix[0][i] = LP::RED_HIGH;
+                    }
+                    else
+                    {
+                        matrix[0][i] = LP::CL_NONE;
+                    }
+                }
+                else
+                {
+                    matrix[1][i] = LP::CL_NONE;
+                    matrix[0][i] = LP::CL_NONE;
+                }
+            }
+            else
+            {
+                matrix[2][i] = LP::CL_NONE;
+                matrix[1][i] = LP::CL_NONE;
+                matrix[0][i] = LP::CL_NONE;
+            }
+        }
+        else
+        {
+            matrix[3][i] = LP::CL_NONE;
+            matrix[2][i] = LP::CL_NONE;
+            matrix[1][i] = LP::CL_NONE;
+            matrix[0][i] = LP::CL_NONE;
+        }
+
+        if (right[i] > 0)
+        {
+            matrix[7][i] = LP::GREEN_HIGH;
+            if (left[i] > 64)
+            {
+                matrix[6][i] = LP::GREEN_HIGH;
+                if (right[i] > 128)
+                {
+                    matrix[5][i] = LP::YELLOW;
+                    if (right[i] > 192)
+                    {
+                        matrix[4][i] = LP::RED_HIGH;
+                    }
+                    else
+                    {
+                        matrix[4][i] = LP::CL_NONE;
+                    }
+                }
+                else
+                {
+                    matrix[5][i] = LP::CL_NONE;
+                    matrix[4][i] = LP::CL_NONE;
+                }
+            }
+            else
+            {
+                matrix[6][i] = LP::CL_NONE;
+                matrix[5][i] = LP::CL_NONE;
+                matrix[4][i] = LP::CL_NONE;
+            }
+        }
+        else
+        {
+            matrix[7][i] = LP::CL_NONE;
+            matrix[6][i] = LP::CL_NONE;
+            matrix[5][i] = LP::CL_NONE;
+            matrix[4][i] = LP::CL_NONE;
+        }
+    }
 }
 
 void POC()
@@ -131,20 +209,35 @@ void POC()
 }
 
 // Code taken almost as is from JUCE play some file tutorial ------------------
-MainAudioComponent *mac = NULL;
+//MainAudioComponent *mac = NULL;
 
 // For the POC : just wait a few seconds, fake the user input ------------------
 
 class BPMTimer : public juce::HighResolutionTimer
 {
+private:
+    int m_count = 1;
 public:
 	void hiResTimerCallback() override;
+	int maxCount = 16;
 };
 
 void BPMTimer::hiResTimerCallback()
 {
-    done = true;
-    this->stopTimer();
+    if (m_count++ > maxCount)
+    {
+        done = true;
+        this->stopTimer();
+    }
+
+    if (nousb)
+    {
+        displayMatrixOnConsole();
+    }
+    else
+    {
+        displayMatrixOnLaunchpad();
+    }
 };
 
 BPMTimer* bpmTimer = NULL;
@@ -164,7 +257,6 @@ int main (int argc, char* argv[])
 	int i, lpOutIndex, lpInIndex;
 	LPCallback lpcb;
 	string dummy;
-	bool nousb = false;
 
 	if (argc == 3)
 	{
@@ -243,11 +335,18 @@ int main (int argc, char* argv[])
         midiInput->start();
 	}
 
-	bpmTimer = new BPMTimer();
-	bpmTimer->startTimer(5000); // Time is money :)
+	cout << "About to create the timer" << endl;
 
-	mac = new MainAudioComponent(argv[1]); // Start immediately !!!
+	bpmTimer = new BPMTimer();
+	bpmTimer->startTimer(250); // Four screen updates per second
+
+	cout << "About to create the ugly singleton" << endl;
+
+	//mac = new MainAudioComponent(argv[1]); // Start immediately !!!
 	//mac->play(); // For now play does not return until the end of the song !!! But use thread::sleep
+
+	initMACSingleton(argv[1], UpdateMatrix); // Beurk kind of global singleton with constructor... Start immediately !!!
+	cout << "About to enter the main loop" << endl;
 
 	// main loop :)
     while (!done)
@@ -257,11 +356,15 @@ int main (int argc, char* argv[])
 	// Stop all !
 	delete bpmTimer;
 
-	mac->stop();
-	delete mac;
+    cout << "About to stop !" << endl;
+	getMACSingleton()->stop();
+	cout << "About to call dtor !" << endl;
+	delete getMACSingleton(); // Argh !-)
+	cout << "Dead here ?" << endl;
 
 	if (!nousb)
 	{
+        cout << "About to clean the usb stuff !" << endl;
         midiInput->stop();
         delete midiInput;
 
