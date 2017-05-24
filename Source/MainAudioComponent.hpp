@@ -23,12 +23,14 @@ public:
     void changeListenerCallback(ChangeBroadcaster *source) override;
 };
 
+/*
 class AudioFormatReaderSourceHook : public AudioFormatReaderSource
 {
 public:
     virtual void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
     virtual void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override; // The override keyword is optional (C++11)
 };
+*/
 
 class AudioTransportSourceHook : public AudioTransportSource
 {
@@ -51,13 +53,18 @@ public:
 };
 */
 
+typedef void (MainThreadCallback)(const juce::uint8[], const juce::uint8[]);
+
 class MainAudioComponent // : public AudioSource // An not AudioAppComponent !... Actually we should not inherit from anything :)
 {
 public:
 	MainAudioComponent(const std::string& fileInput);
     ~MainAudioComponent();
 
+    float m_lTime = 0.f;
+
     AudioChangeListener* m_acl = nullptr;
+    MainThreadCallback* m_mtc = nullptr;
 
     // TODO: Convert all ptr to instance ? Or the opposit... Move also all this back to private !!!
     // See https://www.juce.com/doc/tutorial_playing_sound_files
@@ -65,7 +72,7 @@ public:
     AudioFormatManager* m_afm = nullptr;
     AudioIODevice* m_aiod = nullptr;
     AudioFormatReaderSource* m_afrs = nullptr; // Inherit from AudioSource !
-    AudioFormatReaderSourceHook* m_afrsh = nullptr;
+    //AudioFormatReaderSourceHook* m_afrsh = nullptr;
     AudioTransportSourceHook* m_atsh = nullptr; // Inherit from AudioSource and ChangeBroadcaster !
     AudioDeviceManager* m_adm = nullptr;
     AudioSourcePlayer* m_asp = nullptr; // Wrapper class to continuously stream audio from an audio source to an AudioIODevice
@@ -94,7 +101,7 @@ private:
     */
 };
 
-void initMACSingleton(const std::string& fileInput);
+void initMACSingleton(const std::string& fileInput, MainThreadCallback* callback);
 MainAudioComponent* getMACSingleton();
 
 #endif // MAIN_AUDIO_COMPONENT

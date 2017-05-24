@@ -3160,10 +3160,10 @@
 	"native/juce_android_Fonts.cpp"
 	"native/freetype/FreeTypeAmalgam.c"
 
-1444043134 /usr/include/freetype2/ft2build.h
+1493295744 /usr/include/freetype2/ft2build.h
 	<config/ftheader.h>
 
-1444043134 /usr/include/freetype2/config/ftheader.h
+1493295744 /usr/include/freetype2/config/ftheader.h
 
 1489507322 /home/sam/library/JUCE/modules/juce_graphics/colour/juce_Colour.cpp
 
@@ -4302,7 +4302,7 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_video/capture/juce_CameraDevice.cpp
 
-1494009700 source:/home/sam/laboratory/basf/Source/Main.cpp
+1494763896 source:/home/sam/laboratory/basf/Source/Main.cpp
 	<iostream>
 	<string>
 	<stdint.h>
@@ -4443,11 +4443,11 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_win32_AudioCDBurner.cpp
 
-1494011559 /home/sam/laboratory/basf/Source/MainAudioComponent.hpp
+1494777567 /home/sam/laboratory/basf/Source/MainAudioComponent.hpp
 	<string>
 	"../JuceLibraryCode/JuceHeader.h"
 
-1494009642 source:/home/sam/laboratory/basf/Source/MainAudioComponent.cpp
+1494780260 source:/home/sam/laboratory/basf/Source/MainAudioComponent.cpp
 	<iostream>
 	"MainAudioComponent.hpp"
 

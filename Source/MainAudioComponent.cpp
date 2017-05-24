@@ -2,6 +2,9 @@
 #include <iostream>
 #include "MainAudioComponent.hpp"
 
+// To investigate...
+//#include "kiss_fft.h"
+
 using namespace std;
 
 void AudioChangeListener::changeListenerCallback(ChangeBroadcaster *source)
@@ -13,6 +16,7 @@ void AudioChangeListener::changeListenerCallback(ChangeBroadcaster *source)
     }
 }
 
+/*
 void AudioFormatReaderSourceHook::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
     std::cout << "AudioFormatReaderSourceHook::getNextAudioBlock called !" << std::endl;
@@ -24,14 +28,50 @@ void AudioFormatReaderSourceHook::prepareToPlay(int samplesPerBlockExpected, dou
     std::cout << "AudioFormatReaderSourceHook::samplesPerBlockExpected = " << samplesPerBlockExpected << ", sampleRate = " << sampleRate << std::endl;
     AudioFormatReaderSource::prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
+*/
 
 void AudioTransportSourceHook::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
     std::cout << "AudioTransportSourceHook::getNextAudioBlock called !" << std::endl;
-    AudioTransportSource::getNextAudioBlock(bufferToFill);
+    //AudioTransportSource::getNextAudioBlock(bufferToFill); // Useless
 
-    // Process FFT on the buffer here ?
-    getMACSingleton()->m_afrs->getNextAudioBlock(bufferToFill);
+    getMACSingleton()->m_afrs->getNextAudioBlock(bufferToFill); // Chain to the real sound handler, get the sound data !
+
+    // Send the results back to the main thread... We will fix the eventual locking issue later :)
+    if (getMACSingleton()->m_mtc)
+    {
+        jassert(bufferToFill.buffer->getNumSamples() == 512);
+        int numSamples = bufferToFill.buffer->getNumSamples(); // Should be 512 here !
+
+        // Process FFT on the buffer here !
+        juce::uint8 left[8], right[8];
+        juce::FFT mathStuff(8, false);
+
+        for (int channel = 0; channel < 2; ++channel)
+        {
+            float* channelData = bufferToFill.buffer->getWritePointer(channel);
+            float* freqArray = new float[numSamples * 2];
+            memcpy(freqArray, channelData, numSamples * sizeof(float)); // fills the first half of the array with the signal
+
+            mathStuff.performRealOnlyForwardTransform(freqArray); // In place !
+
+            //mathStuff.performRealOnlyInverseTransform(freqArray);
+            //bufferToFill.buffer->copyFrom(channel, 0, freqArray, numSamples);
+
+            if (channel == 0)
+            {
+                // Left
+            }
+            else
+            {
+                // Right
+            }
+
+            delete[] freqArray;
+        }
+
+        (*(getMACSingleton()->m_mtc))(left, right);
+    }
 }
 
 void AudioTransportSourceHook::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
@@ -41,10 +81,14 @@ void AudioTransportSourceHook::prepareToPlay(int samplesPerBlockExpected, double
 }
 
 MainAudioComponent* mac = nullptr;
-void initMACSingleton(const std::string& fileInput)
+void initMACSingleton(const std::string& fileInput, MainThreadCallback* callback)
 {
+    // MainThreadCallback mtc; This compile but what is the meaning ?
+
     mac = new MainAudioComponent(fileInput);
+    mac->m_mtc = callback;
 }
+
 MainAudioComponent* getMACSingleton()
 {
     return mac;
@@ -91,7 +135,7 @@ MainAudioComponent::MainAudioComponent(const std::string& fileInput)
         cout << "Oups : m_adm is null" << endl;
         return;
 	}
-    m_adm->initialiseWithDefaultDevices(0, 2);
+    m_adm->initialiseWithDefaultDevices(0, 2); // Here we don't choose any specific output device
 
     cout << "step 4" << endl;
     m_aiod = m_adm->getCurrentAudioDevice(); // Needed ! See the stop()
@@ -122,7 +166,7 @@ MainAudioComponent::MainAudioComponent(const std::string& fileInput)
     cout << "step 7 bis" << endl;
     m_asp->setSource(m_atsh); // Replace the m_afrs !
     cout << "step 8" << endl;
-    m_adm->addChangeListener(m_acl);
+    m_adm->addChangeListener(m_acl); // Does not work :(
     cout << "step 9" << endl;
     m_adm->addAudioCallback(m_asp); // Start audio ! On speaker for now... We have to tweak the output...
     cout << "step A" << endl;
