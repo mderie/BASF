@@ -1,11 +1,8 @@
-﻿Build started 01-May-17 17:23:58.
+﻿Build started 24-May-17 20:41:31.
      1>Project "C:\laboratory\BASF\Builds\VisualStudio2013\BASF.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\JuceLibraryCode /I..\..\..\..\library\JUCE\modules /ZI /nologo /W4 /WX- /MP /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D _CONSOLE /D WIN32 /D _WINDOWS /D DEBUG /D _DEBUG /D JUCER_VS2013_78A5020=1 /D JUCE_APP_VERSION=1.0.0 /D JUCE_APP_VERSION_HEX=0x10000 /Gm- /EHsc /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\Source\Main.cpp ..\..\Source\MainAudioComponent.cpp
-         Main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\JuceLibraryCode /I..\..\..\..\library\JUCE\modules /ZI /nologo /W4 /WX- /MP /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D _CONSOLE /D WIN32 /D _WINDOWS /D DEBUG /D _DEBUG /D JUCER_VS2013_78A5020=1 /D JUCE_APP_VERSION=1.0.0 /D JUCE_APP_VERSION_HEX=0x10000 /Gm- /EHsc /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\Source\MainAudioComponent.cpp
          MainAudioComponent.cpp
-     1>c:\laboratory\basf\source\main.cpp(43): warning C4100: 'source' : unreferenced formal parameter
-     1>c:\laboratory\basf\source\main.cpp(58): warning C4189: 'key' : local variable is initialized but not referenced
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\laboratory\BASF\Builds\VisualStudio2013\Debug\\BASF.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:msvcrt.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Debug\\BASF.pdb" /SUBSYSTEM:CONSOLE /LARGEADDRESSAWARE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\laboratory\BASF\Builds\VisualStudio2013\Debug\BASF.lib" /MACHINE:X86 /SAFESEH:NO Debug\resources.res
          Debug\\LaunchpadPrimitives.obj
@@ -27,4 +24,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:08.56
+Time Elapsed 00:00:03.71
