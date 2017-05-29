@@ -310,7 +310,7 @@ void MainAudioComponent::changeState(TransportState newState)
 }
 */
 
-// Useless npw
+// Useless now
 void MainAudioComponent::play()//const std::string& what)
 {
 	/*
@@ -348,12 +348,12 @@ void MainAudioComponent::play(const std::string& what)
 void MainAudioComponent::stop()
 {
     //changeState(Stopping);
+	// Does not work since the play is not needed...
 	//m_afrs->setNextReadPosition(m_afrs->getTotalLength());
 	// m_aiod->stop();
 
     cout << "About to call m_aiod->stop()" << endl;
     m_aiod->stop();
-
 
     // By doing this we will call changeListenerCallback !!!
     //cout << "About to call m_adm->sendSynchronousChangeMessage()" << endl;
