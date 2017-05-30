@@ -87,6 +87,7 @@ public:
     void stop();
 
 private:
+    int m_counter;
     // Just usefull to keep track of the various state...
     /*
     enum TransportState

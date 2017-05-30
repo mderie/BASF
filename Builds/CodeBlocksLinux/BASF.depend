@@ -4302,8 +4302,11 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_video/capture/juce_CameraDevice.cpp
 
-1494763896 source:/home/sam/laboratory/basf/Source/Main.cpp
+1496137651 source:/home/sam/laboratory/basf/Source/Main.cpp
 	<iostream>
+	<iomanip>
+	<fstream>
+	<cmath>
 	<string>
 	<stdint.h>
 	<iso646.h>
@@ -4443,11 +4446,13 @@
 
 1489507322 /home/sam/library/JUCE/modules/juce_audio_utils/native/juce_win32_AudioCDBurner.cpp
 
-1494777567 /home/sam/laboratory/basf/Source/MainAudioComponent.hpp
+1496127342 /home/sam/laboratory/basf/Source/MainAudioComponent.hpp
 	<string>
 	"../JuceLibraryCode/JuceHeader.h"
 
-1494780260 source:/home/sam/laboratory/basf/Source/MainAudioComponent.cpp
+1496134183 source:/home/sam/laboratory/basf/Source/MainAudioComponent.cpp
 	<iostream>
+	<fstream>
+	<chrono>
 	"MainAudioComponent.hpp"
 

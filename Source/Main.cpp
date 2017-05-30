@@ -9,6 +9,9 @@
 */
 
 #include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <cmath>
 #include <string>
 #include <stdint.h> // For the uint8
 #include <iso646.h> // For or support
@@ -17,11 +20,14 @@
 #include "LaunchpadPrimitives.hpp"
 #include "MainAudioComponent.hpp"
 
+#define REFRESH_RATE 100 // Ten per seconds
+#define MAX_REFRESH_COUNT 100 // Ten seconds (coze it is equal to 10 * 10 :)
+
 juce::MidiInput* midiInput = NULL; // LP !
 juce::MidiOutput* midiLP = NULL;
 
 int matrix[8][8]; // (Row, Col)
-LP* lp = NULL;
+LP* lp = nullptr;
 bool done = false;
 bool nousb = false;
 
@@ -51,19 +57,21 @@ void LPCallback::handleIncomingMidiMessage(juce::MidiInput* source, const juce::
 	}
 
 	// Test if it is something else than a key release code
-	if (static_cast<int>(*(p + 2)) != 0)
+	if (static_cast<int>(*(p + 2)) == 0)
 	{
 		return;
 		// s_keyPressed = true; // Check this !?!
 	}
 	//int key = (static_cast<int>(*(p + 1)));
-	done = true; // "any" key pressed :)
+	cout << "Any key pressed :)" << endl;
+	// done = true;
 }
 
 // On Screen (console) stuff --------------------------------------------------
 
 void displayMatrixOnConsole()
 {
+//    return;
 // Nothing in the modern C++ to clear the console (except ncurse maybe)
 #ifdef WINDOWS
     system("cls");
@@ -74,7 +82,7 @@ void displayMatrixOnConsole()
 	{
 		for (int i = 0; i < 8; i++)
 		{
-			cout << matrix[j][i];
+			cout << setw(4) << matrix[j][i] ;
 		}
 		cout << endl;
 	}
@@ -109,11 +117,13 @@ void displayMatrixOnLaunchpad()
 
 void UpdateMatrix(const juce::uint8 left[], const juce::uint8 right[])
 {
-    cout << "Entering/leaving UpdateMatrix !" << endl;
-    return;
+    //cout << "Entering/leaving UpdateMatrix !" << endl;
+    //return;
 
     for (int i = 0; i < 8; i++)
     {
+        //cout << "i = " << i << ", left[i] = " << int(left[i]) << ", right[i] = " << int(right[i]) << endl;
+
         if (left[i] > 0)
         {
             matrix[3][i] = LP::GREEN_HIGH;
@@ -156,7 +166,7 @@ void UpdateMatrix(const juce::uint8 left[], const juce::uint8 right[])
         if (right[i] > 0)
         {
             matrix[7][i] = LP::GREEN_HIGH;
-            if (left[i] > 64)
+            if (right[i] > 64)
             {
                 matrix[6][i] = LP::GREEN_HIGH;
                 if (right[i] > 128)
@@ -194,18 +204,41 @@ void UpdateMatrix(const juce::uint8 left[], const juce::uint8 right[])
     }
 }
 
-void POC()
+void POCAndExit()
 {
 	clearMatrix();
+	/*
 	for (int i = 0; i < 10; i++)
 	{
-		displayMatrixOnConsole();
 		matrix[1][1] = 1;
 		matrix[6][6] = 1;
 		displayMatrixOnConsole();
 		matrix[1][1] = 0;
 		matrix[6][6] = 0;
-	}
+		displayMatrixOnConsole();
+    }
+    */
+
+    juce::uint8 left[8], right[8];
+    left[0] = 1;
+    left[1] = 1;
+    left[2] = 40;
+    left[3] = 40;
+    left[4] = 80;
+    left[5] = 80;
+    left[6] = 120;
+    left[7] = 120;
+    right[0] = 0;
+    right[1] = 0;
+    right[2] = 100;
+    right[3] = 100;
+    right[4] = 0;
+    right[5] = 0;
+    right[6] = 200;
+    right[7] = 200;
+    UpdateMatrix(left, right);
+    displayMatrixOnConsole();
+    exit(0);
 }
 
 // Code taken almost as is from JUCE play some file tutorial ------------------
@@ -219,7 +252,7 @@ private:
     int m_count = 1;
 public:
 	void hiResTimerCallback() override;
-	int maxCount = 16;
+	int maxCount = MAX_REFRESH_COUNT;
 };
 
 void BPMTimer::hiResTimerCallback()
@@ -242,10 +275,94 @@ void BPMTimer::hiResTimerCallback()
 
 BPMTimer* bpmTimer = NULL;
 
+void SpectrumPOCAndExit()
+{
+    juce::FFT mathStuff(3, false); // 2^3 = 8 bars !
+	float sine[512 * 2];
+	ofstream outf;
+	outf.open("out.dat");
+	float x;
+
+	outf << "sin(x)" << endl;
+	for (int i = 0; i < 512; i++)
+	{
+        x = (i - 256)/(2 * M_PI) + 1; // Stay positive !-)
+        sine[i] = std::sin(x);
+        outf << "[i = " << i << "] x = " << x << " ==> sin(x) = " << sine[i] << endl;
+	}
+	for (int i = 0; i < 512; i++)
+	{
+        sine[i + 512] = 0;
+	}
+	mathStuff.performFrequencyOnlyForwardTransform(sine);
+	outf << "fft(x)" << endl;
+	for (int i = 0; i < mathStuff.getSize() ; i++) // getSize returns 2^(ctor parameter)
+	{
+        outf << sine[i] << " and in byte (range 0-7 ?) " << int(sine[i]) << endl;
+	}
+
+	outf << "sin(x)/2" << endl;
+	for (int i = 0; i < 512; i++)
+	{
+        x = (i - 256)/(2 * M_PI) + 1; // Stay positive !-)
+        sine[i] = std::sin(x) / 2;
+        outf << "[i = " << i << "] x = " << x << " ==> sin(x) / 2 = " << sine[i] << endl;
+	}
+	for (int i = 0; i < 512; i++)
+	{
+        sine[i + 512] = 0;
+	}
+	mathStuff.performFrequencyOnlyForwardTransform(sine);
+	outf << "fft(x)" << endl;
+	for (int i = 0; i < mathStuff.getSize(); i++)
+	{
+        outf << sine[i] << endl;
+	}
+
+	outf << "sin(x*2)" << endl;
+	for (int i = 0; i < 512; i++)
+	{
+        x = (i - 256)/(2 * M_PI) + 1; // Stay positive !-)
+        sine[i] = std::sin(x * 2);
+        outf << "[i = " << i << "] x = " << x << " ==> sin(x * 2) = " << sine[i] << endl;
+	}
+	for (int i = 0; i < 512; i++)
+	{
+        sine[i + 512] = 0;
+	}
+	mathStuff.performFrequencyOnlyForwardTransform(sine);
+	outf << "fft(x)" << endl;
+	for (int i = 0; i < mathStuff.getSize(); i++)
+	{
+        outf << sine[i] << endl;
+	}
+
+	/*
+    outf << "mean(x)" << endl;
+    x = 0.0;
+    for (int i = 0; i < 256; i++)
+	{
+        x += sine[i];
+        if ((i > 0) && (i % 32 == 0))
+        {
+            outf << "i = " << i << "; x = " << x / 32 << endl;
+            x = 0.0f;
+        }
+        outf << "i = " << i << "; x = " << x / 32 << endl;
+	}
+	outf << "i = 256; x = " << x / 32 << endl;
+	*/
+	outf.close();
+	exit(0);
+}
+
 // The main (dish) ------------------------------------------------------------
 int main (int argc, char* argv[])
 {
 	cout << "Welcome to BASF (= Bare Audio Spectrogram Fourier)" << endl;
+
+	//SpectrumPOCAndExit();
+	//POCAndExit();
 
 	if ((argc < 2) or (argc > 3))
 	{
@@ -328,7 +445,7 @@ int main (int argc, char* argv[])
             lpInIndex = 1; // Fine tune this default value !
         }
 
-        std::cout << "About to use" << lpInIndex << " as index... Press ENTER or CTRL-C to stop !" << std::endl;
+        std::cout << "About to use " << lpInIndex << " as index... Press ENTER or CTRL-C to stop !" << std::endl;
         std::getline(std::cin, dummy);
 
         midiInput = juce::MidiInput::openDevice(lpInIndex, &lpcb);
@@ -338,7 +455,7 @@ int main (int argc, char* argv[])
 	cout << "About to create the timer" << endl;
 
 	bpmTimer = new BPMTimer();
-	bpmTimer->startTimer(250); // Four screen updates per second
+	bpmTimer->startTimer(REFRESH_RATE); // Five screen updates per second
 
 	cout << "About to create the ugly singleton" << endl;
 
@@ -354,26 +471,27 @@ int main (int argc, char* argv[])
 	}
 
 	// Stop all !
+	bpmTimer->stopTimer();
 	delete bpmTimer;
+
+    if (!nousb)
+	{
+        cout << "About to clean the usb stuff !" << endl;
+        midiInput->stop();
+        delete midiInput;
+
+        lp->ClearScreen(); // We still need midiLP for this...
+        // Does not exist !-)
+        //midiLP->stop();
+        delete midiLP;
+        delete lp;
+    }
 
     cout << "About to stop !" << endl;
 	getMACSingleton()->stop();
 	cout << "About to call dtor !" << endl;
 	delete getMACSingleton(); // Argh !-)
 	cout << "Dead here ?" << endl;
-
-	if (!nousb)
-	{
-        cout << "About to clean the usb stuff !" << endl;
-        midiInput->stop();
-        delete midiInput;
-
-        //midiLP->stop();
-        delete midiLP;
-
-        lp->ClearScreen();
-        delete lp;
-    }
 
     cout << "That's all folks !" << endl;
 

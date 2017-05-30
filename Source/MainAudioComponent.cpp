@@ -1,5 +1,7 @@
 
 #include <iostream>
+#include <fstream>
+#include <chrono>
 #include "MainAudioComponent.hpp"
 
 // To investigate...
@@ -32,7 +34,7 @@ void AudioFormatReaderSourceHook::prepareToPlay(int samplesPerBlockExpected, dou
 
 void AudioTransportSourceHook::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
-    std::cout << "AudioTransportSourceHook::getNextAudioBlock called !" << std::endl;
+    //std::cout << "AudioTransportSourceHook::getNextAudioBlock called !" << std::endl;
     //AudioTransportSource::getNextAudioBlock(bufferToFill); // Useless
 
     getMACSingleton()->m_afrs->getNextAudioBlock(bufferToFill); // Chain to the real sound handler, get the sound data !
@@ -45,26 +47,52 @@ void AudioTransportSourceHook::getNextAudioBlock(const AudioSourceChannelInfo& b
 
         // Process FFT on the buffer here !
         juce::uint8 left[8], right[8];
-        juce::FFT mathStuff(8, false);
+        juce::FFT mathStuff(3, false);
+
+        /*
+        // Dump audio buffer
+        ofstream soundf;
+        chrono::system_clock::time_point tp = chrono::system_clock::now();
+        chrono::system_clock::duration dtn = tp.time_since_epoch();
+        string filename = "soundf_" + to_string(dtn.count()) + ".dat";
+        */
 
         for (int channel = 0; channel < 2; ++channel)
         {
             float* channelData = bufferToFill.buffer->getWritePointer(channel);
+            /*
+            if (channel)
+            {
+                soundf.open(filename); // Else use a stringsteam, the << operator for the counter and then the .str()
+                for (int i = 0; i < numSamples; i++)
+                {
+                    soundf << "[" << i << "] = " << (*(channelData + i));
+                }
+                soundf.close();
+            }
+            */
+
             float* freqArray = new float[numSamples * 2];
             memcpy(freqArray, channelData, numSamples * sizeof(float)); // fills the first half of the array with the signal
-
-            mathStuff.performRealOnlyForwardTransform(freqArray); // In place !
+            mathStuff.performFrequencyOnlyForwardTransform(freqArray); // In place !
 
             //mathStuff.performRealOnlyInverseTransform(freqArray);
             //bufferToFill.buffer->copyFrom(channel, 0, freqArray, numSamples);
 
             if (channel == 0)
             {
-                // Left
+                // Left : to check ;-)
+                for(int i = 0; i < mathStuff.getSize(); i++)
+                {
+                    left[i] = juce::uint8(freqArray[i] * 32); // Seems that only even indices should be taken
+                }
             }
             else
             {
-                // Right
+                for(int i = 0; i < mathStuff.getSize(); i++)
+                {
+                    right[i] = juce::uint8(freqArray[i] * 32);
+                }
             }
 
             delete[] freqArray;
@@ -182,6 +210,7 @@ MainAudioComponent::MainAudioComponent(const std::string& fileInput)
 
     //TODO : needed ?
     //m_audioSourcePlayer.setSource(this);
+    m_counter = 0;
 }
 
 MainAudioComponent::~MainAudioComponent()
