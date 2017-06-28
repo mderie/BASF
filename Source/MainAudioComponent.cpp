@@ -84,14 +84,14 @@ void AudioTransportSourceHook::getNextAudioBlock(const AudioSourceChannelInfo& b
                 // Left : to check ;-)
                 for(int i = 0; i < mathStuff.getSize(); i++)
                 {
-                    left[i] = juce::uint8(freqArray[i] * 32); // Seems that only even indices should be taken
+                    left[i] = juce::uint8(freqArray[i] * 32 * 4); // Seems that only even indices should be taken if using performRealOnlyInverseTransform
                 }
             }
             else
             {
                 for(int i = 0; i < mathStuff.getSize(); i++)
                 {
-                    right[i] = juce::uint8(freqArray[i] * 32);
+                    right[i] = juce::uint8(freqArray[i] * 32 * 4); // * 4 ==> Range issue ???
                 }
             }
 

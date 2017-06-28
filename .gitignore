@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.dat
 
 # Visual C++ cache files
 ipch/
