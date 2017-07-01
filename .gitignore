@@ -11,6 +11,7 @@
 *.sln.docstates
 *.exe
 *.obj
+*.dat
 
 # Visual C++ cache files
 ipch/
