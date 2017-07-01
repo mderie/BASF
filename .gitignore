@@ -9,6 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.exe
+*.obj
 
 # Visual C++ cache files
 ipch/
@@ -20,3 +22,8 @@ ipch/
 *.cachefile
 *.VC.db
 *.VC.VC.opendb
+*.ilk
+*.log
+*.pdb
+*.tlog
+*.idb

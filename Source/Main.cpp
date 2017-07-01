@@ -17,8 +17,9 @@
 #include "LaunchpadPrimitives.hpp"
 #include "MainAudioComponent.hpp"
 
-juce::MidiInput* midiInput = NULL; // LP !
-juce::MidiOutput* midiLP = NULL;
+// Both are the LP :)
+juce::MidiInput* midiInput = NULL;
+juce::MidiOutput* midiOutput = NULL;
 
 int matrix[8][8]; // (Row, Col)
 LP* lp = NULL;
@@ -102,7 +103,7 @@ void displayMatrixOnLaunchpad()
 	{
 		for (int i = 0; i < 8; i++)
 		{
-			lp->SetPixel(i, j, matrix[j][i]); // [j,i] does not compile, weird error message (invalid conversion fomr in* to int)
+			lp->SetPixel(i, j, matrix[j][i]); // [j,i] does not compile, but produce a weird error message (invalid conversion from int* to int)
 		}
 	}
 }
@@ -110,9 +111,9 @@ void displayMatrixOnLaunchpad()
 void UpdateMatrix(const juce::uint8 left[], const juce::uint8 right[])
 {
     cout << "Entering/leaving UpdateMatrix !" << endl;
-    return;
+    //return;
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 8; i++) // Column
     {
         if (left[i] > 0)
         {
@@ -304,8 +305,8 @@ int main (int argc, char* argv[])
         std::cout << "About to use " << lpOutIndex << " as index... Press ENTER or CTRL-C to stop !" << std::endl;
         std::getline(std::cin, dummy);
 
-        midiLP = juce::MidiOutput::openDevice(lpOutIndex);
-        lp = new LP(midiLP);
+		midiOutput = juce::MidiOutput::openDevice(lpOutIndex);
+		lp = new LP(midiOutput);
         lp->ClearScreen();
 
         // Get again the LP but for input this time
@@ -368,8 +369,8 @@ int main (int argc, char* argv[])
         midiInput->stop();
         delete midiInput;
 
-        //midiLP->stop();
-        delete midiLP;
+        //midiOutput ->stop();
+		delete midiOutput;
 
         lp->ClearScreen();
         delete lp;

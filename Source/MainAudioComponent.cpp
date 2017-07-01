@@ -45,15 +45,15 @@ void AudioTransportSourceHook::getNextAudioBlock(const AudioSourceChannelInfo& b
 
         // Process FFT on the buffer here !
         juce::uint8 left[8], right[8];
-        juce::FFT mathStuff(8, false);
+        juce::FFT mathStuff(3, false);
 
         for (int channel = 0; channel < 2; ++channel)
         {
-            float* channelData = bufferToFill.buffer->getWritePointer(channel);
+            float* channelData = bufferToFill.buffer->getWritePointer(channel); // Why a write ptr ?
             float* freqArray = new float[numSamples * 2];
             memcpy(freqArray, channelData, numSamples * sizeof(float)); // fills the first half of the array with the signal
 
-            mathStuff.performRealOnlyForwardTransform(freqArray); // In place !
+            mathStuff.performFrequencyOnlyForwardTransform(freqArray); // In place !
 
             //mathStuff.performRealOnlyInverseTransform(freqArray);
             //bufferToFill.buffer->copyFrom(channel, 0, freqArray, numSamples);
