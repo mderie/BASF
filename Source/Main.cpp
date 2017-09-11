@@ -285,7 +285,8 @@ BPMTimer* bpmTimer = NULL;
 
 void SpectrumPOCAndExit()
 {
-    juce::FFT mathStuff(3, false); // 2^3 = 8 bars !
+	//juce::FFT mathStuff(3, false); // 2^3 = 8 bars !
+	juce::dsp::FFT mathStuff(3);
 	float sine[512 * 2];
 	ofstream outf;
 	outf.open("out.dat");

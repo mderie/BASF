@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+
 #include "MainAudioComponent.hpp"
 
 // To investigate...
@@ -47,7 +48,8 @@ void AudioTransportSourceHook::getNextAudioBlock(const AudioSourceChannelInfo& b
 
         // Process FFT on the buffer here !
         juce::uint8 left[8], right[8];
-        juce::FFT mathStuff(3, false);
+        //juce::FFT mathStuff(3, false);
+        juce::dsp::FFT mathStuff(3);
 
         /*
         // Dump audio buffer

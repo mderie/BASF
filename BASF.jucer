@@ -2,7 +2,8 @@
 
 <JUCERPROJECT id="Eaqwe8" name="BASF" projectType="consoleapp" version="1.0.0"
               bundleIdentifier="com.yourcompany.BASF" includeBinaryInAppConfig="1"
-              jucerVersion="4.3.1">
+              jucerVersion="5.1.1" displaySplashScreen="1" reportAppUsage="1"
+              splashScreenColour="Dark" cppLanguageStandard="14">
   <MAINGROUP id="PL9xxm" name="BASF">
     <GROUP id="{8C234943-FD47-BE7C-2EC2-2F1C2494481B}" name="Source">
       <FILE id="kkTJUJ" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
@@ -28,12 +29,14 @@
         <MODULEPATH id="juce_data_structures" path="../../library/JUCE/modules"/>
         <MODULEPATH id="juce_graphics" path="../../library/JUCE/modules"/>
         <MODULEPATH id="juce_audio_utils" path="../../library/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../library/JUCE/modules"/>
       </MODULEPATHS>
     </VS2013>
     <CODEBLOCKS_LINUX targetFolder="Builds/CodeBlocksLinux" vst3Folder="">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="BASF"/>
-        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="BASF"/>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="BASF" linuxCodeBlocksArchitecture="-m64"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="BASF"
+                       linuxCodeBlocksArchitecture="-m64"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_events" path="../../library/JUCE/modules"/>
@@ -47,6 +50,7 @@
         <MODULEPATH id="juce_data_structures" path="../../library/JUCE/modules"/>
         <MODULEPATH id="juce_graphics" path="../../library/JUCE/modules"/>
         <MODULEPATH id="juce_audio_utils" path="../../library/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../library/JUCE/modules"/>
       </MODULEPATHS>
     </CODEBLOCKS_LINUX>
   </EXPORTFORMATS>
@@ -58,6 +62,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
